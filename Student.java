@@ -16,4 +16,9 @@ public class Student {
 		this.name = name;
 		this.choice = choice;
 	} // end of the Constructor
+	
+	// used to print Student
+	public String toString() {
+		return email + " " + name;
+	} // end of the toString method
 } // end of the class
