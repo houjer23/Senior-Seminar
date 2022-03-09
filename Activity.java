@@ -14,4 +14,9 @@ public class Activity {
 		this.name = name;
 		this.presenter = presenter;
 	} // end of the Constructor
+	
+	// used to print activty
+	public String toString() {
+		return "Name: " + name + "    Presenter: " + presenter;
+	} // end of toString method
 } // end of the class
