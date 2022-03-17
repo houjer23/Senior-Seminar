@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.stream.IntStream;
 import java.util.Deque;
 import java.util.ArrayDeque;
+import java.io.*;
 //import java.util.Intstream;
 public class Tester {
 	// variables used to store student information, individual activity information, popularity of the session, and the final result
@@ -27,15 +28,21 @@ public class Tester {
 	// students_in_session: gives the student in each session
 	public static List<List<List<Integer>>> students_in_session = new ArrayList<>();
 	// the code runs here
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws IOException {
 		// Store all inputs to the arraylist
         Scanner scanner = new Scanner(new File("SrSeminar_Arranged.csv"));
         scanner.useDelimiter(",");
         ArrayList<String> input = new ArrayList<>();
-        while(scanner.hasNext()){
-			String cur = scanner.next();
-            input.add(cur);
-        }
+        BufferedReader csvReader = new BufferedReader(new FileReader("SrSeminar_Arranged.csv"));
+        String row;
+		while ((row = csvReader.readLine()) != null) {
+			String[] data = row.split(",");
+			for (int i = 0; i < data.length; i ++) {
+				input.add(data[i]);
+			}
+		}
+		csvReader.close();
+        System.out.println(input);
         scanner.close();
         store_data(input);
         
@@ -74,26 +81,18 @@ public class Tester {
 			String email = input.remove(0);
 			String name = input.remove(0) + " " + input.remove(0);
 			int[] choice = new int[5];
-			for (int j = 0; j < 4; j ++) {
+			for (int j = 0; j < 5; j ++) {
 				choice[j] = Integer.parseInt(input.remove(0));
 			}
-			choice[4] = Integer.parseInt(input.get(0).substring(0, 1));
-			String format_last_string = input.get(0);
-			format_last_string = format_last_string.replaceAll("[\\n]", "");
-			input.set(0, format_last_string);
 			Student s = new Student(email, name, choice);
 			students[i] = s;
 		}
 		// construct Activity
-		while (input.size() != 0) {
+		while (input.size() > 0) {
 			String name = input.remove(0);
 			int id = Integer.parseInt(input.remove(0));
 			String presenter = input.remove(0);
 			activities[id - 1] = new Activity(name, presenter);
-			for (int j = 0; j < 4; j ++) {
-				input.remove(0);
-			}
-			if (input.size() != 0) input.set(0, input.get(0).replaceAll("[\\n]", ""));
 		}
 	} // end of store data method
 	
@@ -158,25 +157,44 @@ public class Tester {
 			for (int j = 0; j < 5; j ++) { // creates choice in arraylist
 				choice.add(choice_array[j] - 1);
 			}
+			//System.out.println(choice);
 			for (int j = 0; j < 5; j ++) { // loop through each day
 				boolean flag = false;
 				for (int k = 0; k < choice.size(); k ++) { // loop through each choice left over
-					if (flag) {
+					if (flag) { // if the student gets its choice
 						break;
 					}
 					for (int l = 0; l < 6; l ++) { // loop through each session
 						if (session_placement.get(j).get(l) == choice.get(k) && students_in_session.get(j).get(l).size() <= 15) {
 							students_in_session.get(j).get(l).add(i);
 							choice.remove(k);
+							//System.out.println(choice + " " + i);
 							flag = true;
 							break;
 						}
 					}
 				}
+				if (flag == false) { // if student doesn't get its choice
+					List<Integer> cur_student_unpaired = new ArrayList<>();
+					cur_student_unpaired.add(i);
+					cur_student_unpaired.add(j);
+					unpaired_students.add(cur_student_unpaired);
+					//System.out.println(choice + " " + i);
+				}
+				for (int k = 0; k < students_in_session.size(); k ++) {
+					//System.out.println(students_in_session.get(k));
+				}
 			}
+			System.out.println(choice + " " + i);
 		}
+		System.out.println(unpaired_students);
 		for (int i = 0; i < students_in_session.size(); i ++) {
 			System.out.println(students_in_session.get(i));
 		}
+		
+		/*while (unpaired_students.size() > 0) {
+			List<Integer> cur_student = unpaired_student.push();
+			
+		}*/
 	}
 } // end of Tester class
