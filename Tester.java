@@ -10,11 +10,16 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 import java.util.HashMap;
 public class Tester {
-	// variables used to store student information and activity information
+	// variables used to store student information, individual activity information, popularity of the session, and the final result
 	public static Student[] students = new Student[69];
 	public static Activity[] activities = new Activity[18];
+	public static Session[] sessions = new Session[18];
+	// result: row = time spot, column = session in the time spot, each item stores the meeting id and the student id
+	public static List<List<Map<Integer, List<Integer>>>> result = new ArrayList<>();
 	// the code runs here
 	public static void main(String[] args) throws FileNotFoundException {
 		// Store all inputs to the arraylist
@@ -24,7 +29,6 @@ public class Tester {
         while(scanner.hasNext()){
 			String cur = scanner.next();
             input.add(cur);
-            //System.out.println(cur);
         }
         scanner.close();
         store_data(input);
@@ -36,6 +40,15 @@ public class Tester {
 		for (int i = 0; i < activities.length; i ++) {
 			System.out.println(activities[i]);
 		}
+		System.out.println("\n\n\n");
+		
+		// rank popularity and print out popularity
+		sort_popular_session();
+		for (int i = 0; i < sessions.length; i ++) {
+			System.out.println(sessions[i]);
+		}
+		
+		
     } // end of public static void main
     
     // pass the arraylist with all inputs to the store data method and construct Student and Activity
@@ -67,4 +80,28 @@ public class Tester {
 			if (input.size() != 0) input.set(0, input.get(0).replaceAll("[\\n]", ""));
 		}
 	} // end of store data method
+	
+	// method used to rank the popular session from most popular to least popular
+	public static void sort_popular_session() {
+		for (int i = 0; i < sessions.length; i ++) {
+			sessions[i] = new Session(i, 0);
+		}
+		for (int i = 0; i < students.length; i ++) {
+			int[] cur_choice = students[i].get_choice();
+			for (int j = 0; j < cur_choice.length; j ++) {
+				sessions[cur_choice[j] - 1].increase_popularity(5 - j);
+			}
+		}
+		Arrays.sort(sessions);
+	} // end of the sorting popular session method
+	
+	// this method construct the result (i.e. give session id at each spot)
+	public static void construct_time_spot() {
+		for (int i = 0; i < 5; i ++) {
+			for (int j = 0; j < 6; j ++) {
+				
+			}
+		}
+	}
+
 } // end of Tester class
