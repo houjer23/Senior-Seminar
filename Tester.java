@@ -73,6 +73,9 @@ public class Tester {
 		for (int i = 0; i < students_in_session.size(); i ++) {
 			System.out.println(students_in_session.get(i));
 		}
+		
+		// write the result in csv file, including sessions each day and the session each student goes to
+		write_result_in_csv();
     } // end of public static void main
     
     // pass the arraylist with all inputs to the store data method and construct Student and Activity
@@ -166,8 +169,8 @@ public class Tester {
 					for (int l = 0; l < 6; l ++) { // loop through each session
 						if (session_placement.get(j).get(l) == choice.get(k) && students_in_session.get(j).get(l).size() < 15) {
 							students_in_session.get(j).get(l).add(i);
+							students[i].add_session(j, choice.get(k));
 							choice.remove(k);
-							//System.out.println(choice + " " + i);
 							flag = true;
 							break;
 						}
@@ -180,17 +183,77 @@ public class Tester {
 					unpaired_students.add(cur_student_unpaired);
 				}
 			}
+			System.out.println(i + " " + choice);
 		}
 		// Here, it puts the students who are unpaired at a specific time to one spot
 		// unpaired staudent: [student id, time spot]
 		while (unpaired_students.size() > 0) {
 			List<Integer> cur_student = unpaired_students.pop();
+			int student_id = cur_student.get(0);
+			int time_spot = cur_student.get(1);
 			//System.out.println(cur_student);
 			for (int i = 5; i >= 0; i --) {
-				if (students_in_session.get(cur_student.get(1)).get(i).size() < 15) {
-					students_in_session.get(cur_student.get(1)).get(i).add(cur_student.get(0));
+				if (students_in_session.get(time_spot).get(i).size() < 15) {
+					students_in_session.get(time_spot).get(i).add(student_id);
+					int session_id = session_placement.get(time_spot).get(i);
+					students[student_id].add_session(time_spot, session_id);
+					break;
 				}
 			}
 		}
 	} // end of the putting student into idea spot method
+	
+	// This method writes down the result as a csv file
+	public static void write_result_in_csv() throws IOException {
+		// write down individual student plan
+		// Our example data
+		FileWriter csvWriter = new FileWriter("Session_for_Student.csv");
+		csvWriter.append("Name");
+		for (int i = 1; i <= 5; i ++) {
+			csvWriter.append(",");
+			csvWriter.append("Day " + i + " Session Name");
+			csvWriter.append(",");
+			csvWriter.append("Day " + i + " Session ID");
+		}
+		csvWriter.append("\n");
+		for (int i = 0; i < students.length; i ++) {
+			csvWriter.append(students[i].get_name());
+			csvWriter.append(",");
+			int[] result = students[i].get_result();
+			for (int j = 0; j < 5; j ++) {
+				csvWriter.append(activities[result[j]].get_name());
+				csvWriter.append(",");
+				csvWriter.append(String.valueOf(result[j] + 1));
+				if (j < 4) {
+					csvWriter.append(",");
+				}
+			}
+			csvWriter.append("\n");
+		}
+		// create a csv for overall schedule
+		csvWriter = new FileWriter("Session_Overall.csv");
+		for (int i = 1; i < 7; i ++) {
+			csvWriter.append(",");
+			csvWriter.append("Session #" + i + " Name");
+			csvWriter.append(",");
+			csvWriter.append("Presenter for Session #" + i);
+		}
+		csvWriter.append("\n");
+		for (int i = 0; i < 5; i ++) {
+			csvWriter.append("Day " + (i + 1));
+			csvWriter.append(",");
+			for (int j = 0; j < 6; j ++) {
+				int cur_session_id = session_placement.get(i).get(j);
+				csvWriter.append(activities[cur_session_id].get_name());
+				csvWriter.append(",");
+				csvWriter.append(activities[cur_session_id].get_presenter());
+				if (j < 5) {
+					csvWriter.append(",");
+				}
+			}
+			csvWriter.append("\n");
+		}
+		csvWriter.flush();
+		csvWriter.close();
+	} // end of the csv writing
 } // end of Tester class
