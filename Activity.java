@@ -6,8 +6,8 @@
 */
 
 public class Activity {
-	String name;
-	String presenter;
+	private String name;
+	private String presenter;
 	
 	// Constructor for the Activity
 	public Activity(String name, String presenter) {
@@ -19,4 +19,14 @@ public class Activity {
 	public String toString() {
 		return "Name: " + name + "    Presenter: " + presenter;
 	} // end of toString method
+	
+	// getter method for the session name
+	public String get_name() {
+		return name;
+	} // end of the getter method
+	
+	// getter method for the session presenter
+	public String get_presenter() {
+		return presenter;
+	} // end of the getter method
 } // end of the class
