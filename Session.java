@@ -24,6 +24,11 @@ public class Session implements Comparable<Session>{
 		popularity += amount;
 	} // end of the setter method
 	
+	// getter method for id
+	public int get_id() {
+		return id;
+	} // end of the getter method
+	
 	// rewrite toString method
 	public String toString() {
 		return "Session Id: " + id + " Popularity: " + popularity;
