@@ -1,2 +1,7 @@
 # Senior-Seminar
-A program that sets up the sessions for individual students according to their choice. It tries its best to optimize and limit the amount of conflicts for students to attend their desired sessions.
+There will be 5 days. In each day, the school will host six sessions for high school students. The student will have five top choices, ranking from the best to the worest. Therefore, this program will set up the sessions for individual students according to their choice, and it tries its best to optimize and limit the amount of conflicts for students to attend their desired sessions. Several factors have to be considered in this program, including the teacher availability, maximum session size of 15, limitations for sessions, and students' desires.
+
+Here are several steps that I approached the problem
+1. Arrange the raw data into a more clear version of the data and use BufferedReader to store the data, including the student information and the session information.
+2. Loop through students' choices and use this information to figure out the popularity of a session. If a student chooses a session as his/her top choice, the popularity of such session will be incremented by 5. Similarly, If a student chooses a session as his/her last choice, the popularity of such session will be incremented by 1.
+3. Now sessions can be placed into different time spots. If a session is more popular, it will get two time spots. On the contrary, if a session is less popular, it will be held only one time. There will be some human arrangments to ensure that no speaker will need to hold two sessions in one day.
